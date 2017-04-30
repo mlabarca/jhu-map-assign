@@ -3,13 +3,15 @@ class ThingsController < ApplicationController
   helper ThingsHelper
   before_action :set_thing, only: [:show, :update, :destroy]
   before_action :authenticate_user!, only: [:create, :update, :destroy]
-  wrap_parameters :thing, include: ["name", "description", "notes"]
+  wrap_parameters :thing, include: ["name", "description", "notes", "tag_ids"]
   after_action :verify_authorized
   after_action :verify_policy_scoped, only: [:index]
 
   def index
     authorize Thing
-    things = policy_scope(Thing.all)
+    things = policy_scope(Thing)
+    things = Thing.from_tags(things, params[:tag_ids]) if can_filter?
+
     @things = ThingPolicy.merge(things)
   end
 
@@ -40,7 +42,8 @@ class ThingsController < ApplicationController
   def update
     authorize @thing
 
-    if @thing.update(thing_params)
+    # Wrap params not working for tag_ids.
+    if @thing.update(thing_params.merge({tag_ids: params[:tag_ids]}))
       head :no_content
     else
       render json: {errors:@thing.errors.messages}, status: :unprocessable_entity
@@ -63,6 +66,10 @@ class ThingsController < ApplicationController
     def thing_params
       params.require(:thing).tap {|p|
           p.require(:name) #throws ActionController::ParameterMissing
-        }.permit(:name, :description, :notes)
+        }.permit(:name, :description, :notes, :tag_ids)
+    end
+
+    def can_filter?
+      @current_user.present?
     end
 end

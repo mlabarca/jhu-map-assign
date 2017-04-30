@@ -22,6 +22,17 @@
       return Authz.isAuthenticated();
     };
 
+    ThingsAuthz.prototype.canFilterByTag=function() {
+      return Authz.isAuthenticated();
+    };
+
+    ThingsAuthz.prototype.canViewTags=function() {
+      return Authz.isAuthenticated();
+    };
+
+    ThingsAuthz.prototype.canEditTags=function(thing) {
+      return Authz.isOrganizer(thing);
+    };
       //add custom definitions
     ThingsAuthz.prototype.canAddImage=function(thing) {
         return Authz.isMember(thing);
@@ -32,7 +43,7 @@
     ThingsAuthz.prototype.canRemoveImage=function(thing) {
         return Authz.isOrganizer(thing) || Authz.isAdmin();
     };
-    
+
     return new ThingsAuthz();
   }
 })();

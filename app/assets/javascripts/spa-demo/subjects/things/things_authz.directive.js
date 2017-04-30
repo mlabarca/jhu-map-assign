@@ -22,7 +22,7 @@
     }
   }
 
-  ThingAuthzController.$inject = ["$scope", 
+  ThingAuthzController.$inject = ["$scope",
                                   "spa-demo.subjects.ThingsAuthz"];
   function ThingAuthzController($scope, ThingsAuthz) {
     var vm = this;
@@ -48,17 +48,20 @@
 
       vm.authz.authenticated = ThingsAuthz.isAuthenticated();
       vm.authz.canQuery      = ThingsAuthz.canQuery();
+      vm.authz.canFilterByTag = ThingsAuthz.canFilterByTag();
+      vm.authz.canViewTags    = ThingsAuthz.canViewTags();
       vm.authz.canCreate     = ThingsAuthz.canCreate();
       if (item && item.$promise) {
         vm.authz.canUpdate      = false;
         vm.authz.canDelete      = false;
         vm.authz.canGetDetails  = false;
         vm.authz.canUpdateImage = false;
-        vm.authz.canRemoveImage = false;      
+        vm.authz.canRemoveImage = false;
+        vm.authz.canEditTags    = false;
         item.$promise.then(function(){ checkAccess(item); });
       } else {
         checkAccess(item);
-      }      
+      }
     }
 
     function checkAccess(item) {
@@ -66,12 +69,13 @@
       vm.authz.canDelete     = ThingsAuthz.canDelete(item);
       vm.authz.canGetDetails = ThingsAuthz.canGetDetails(item);
       vm.authz.canUpdateImage = ThingsAuthz.canUpdateImage(item);
-      vm.authz.canRemoveImage = ThingsAuthz.canRemoveImage(item);      
+      vm.authz.canRemoveImage = ThingsAuthz.canRemoveImage(item);
+      vm.authz.canEditTags   = ThingsAuthz.canEditTags(item);
       //console.log("checkAccess", item, vm.authz);
     }
 
     function canUpdateItem(item) {
       return ThingsAuthz.canUpdate(item);
-    }    
+    }
   }
 })();

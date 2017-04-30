@@ -62,7 +62,7 @@ namespace :ptourist do
     puts "downloading #{url}"
     contents = open(url,{ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
     original_content=ImageContent.new(:image_id=>img[:image].id,
-                                      :content_type=>"image/jpeg", 
+                                      :content_type=>"image/jpeg",
                                       :content=>BSON::Binary.new(contents))
     ImageContentCreator.new(img[:image], original_content).build_contents.save!
   end
@@ -82,18 +82,31 @@ namespace :ptourist do
       puts "building image for #{thing.name}, #{img[:caption]}, by #{organizer.name}"
       image=Image.create(:creator_id=>organizer.id,:caption=>img[:caption],:lat=>img[:lat],:lng=>img[:lng])
       organizer.add_role(Role::ORGANIZER, image).save
-      ThingImage.new(:thing=>thing, :image=>image, 
+      ThingImage.new(:thing=>thing, :image=>image,
                      :creator_id=>organizer.id)
                 .tap {|ti| ti.priority=img[:priority] if img[:priority]}.save!
       create_image_content img.merge(:image=>image)
     end
   end
 
+  def create_tag name
+    tag = Tag.create!(name: name)
+    puts "Created tag: '#{tag.name}'"
+    tag
+  end
+
+  def create_thing_tag thing, tag
+    return unless thing.present? && tag.present?
+    thing_tag = ThingTag.create!(tag_id: tag.id, thing_id: thing.id)
+    p "Associated thing #{thing.name} with tag #{tag.name}"
+    thing_tag
+  end
+
   desc "reset all data"
   task reset_all: [:users,:subjects] do
   end
 
-  desc "deletes things, images, and links" 
+  desc "deletes things, images, and links"
   task delete_subjects: :environment do
     puts "removing #{Thing.count} things and #{ThingImage.count} thing_images"
     puts "removing #{Image.count} images"
@@ -112,7 +125,7 @@ namespace :ptourist do
     puts "creating users: #{MEMBERS}"
 
     MEMBERS.each_with_index do |fn,idx|
-     User.create(:name  => user_name(fn),
+      User.create(:name  => user_name(fn),
                  :email => user_email(fn),
                  :password => "password#{idx}")
     end
@@ -128,7 +141,7 @@ namespace :ptourist do
     puts "users:#{User.pluck(:name)}"
   end
 
-  desc "reset things, images, and links" 
+  desc "reset things, images, and links"
   task subjects: [:users] do
     puts "creating things, images, and links"
 
@@ -208,7 +221,7 @@ namespace :ptourist do
     images=[
     {:path=>"db/bta/hitim-001.jpg",
      :caption=>"Hotel Front Entrance",
-     :lng=>-76.64285450000001, 
+     :lng=>-76.64285450000001,
      :lat=>39.454538,
      :priority=>0
      }
@@ -223,33 +236,33 @@ namespace :ptourist do
     images=[
     {:path=>"db/bta/naqua-001.jpg",
      :caption=>"National Aquarium buildings",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851,
      :priority=>0
      },
     {:path=>"db/bta/naqua-002.jpg",
      :caption=>"Blue Blubber Jellies",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851,
      },
     {:path=>"db/bta/naqua-003.jpg",
      :caption=>"Linne's two-toed sloths",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851,
      },
     {:path=>"db/bta/naqua-004.jpg",
      :caption=>"Hosting millions of students and teachers",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851,
      }
     ]
     create_thing thing, organizer, members, images
 
     thing={:name=>"Hyatt Place Baltimore",
-    :description=>"The New Hyatt Place Baltimore/Inner Harbor, located near Fells Point, offers a refreshing blend of style and innovation in a neighborhood alive with cultural attractions, shopping and amazing local restaurants. 
+    :description=>"The New Hyatt Place Baltimore/Inner Harbor, located near Fells Point, offers a refreshing blend of style and innovation in a neighborhood alive with cultural attractions, shopping and amazing local restaurants.
 
 Whether you’re hungry, thirsty or bored, Hyatt Place Baltimore/Inner Harbor has something to satisfy your needs. Start your day with our free a.m. Kitchen Skillet™, featuring hot breakfast sandwiches, breads, cereals and more. Visit our 24/7 Gallery Market for freshly packaged grab n’ go items, order a hot, made-to-order appetizer or sandwich from our 24/7 Gallery Menu or enjoy a refreshing beverage from our Coffee to Cocktails Bar.
- 
+
 Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio equipment and free weights. Then, float and splash around in our indoor pool, open year-round for your relaxation. There’s plenty of other spaces throughout our Inner Harbor hotel for you to chill and socialize with other guests. For your comfort and convenience, all Hyatt Place hotels are smoke-free.
 "}
     organizer=get_user("marsha")
@@ -257,49 +270,49 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
     images=[
     {:path=>"db/bta/hpm-001.jpg",
      :caption=>"Hotel Front Entrance",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847,
      :priority=>0
      },
     {:path=>"db/bta/hpm-002.jpg",
      :caption=>"Terrace",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847,
      :priority=>1
      },
     {:path=>"db/bta/hpm-003.jpg",
      :caption=>"Cozy Corner",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-004.jpg",
      :caption=>"Fitness Center",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-005.jpg",
      :caption=>"Gallery Area",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-006.jpg",
      :caption=>"Harbor Room",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-007.jpg",
      :caption=>"Indoor Pool",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-008.jpg",
      :caption=>"Lobby",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-009.jpg",
      :caption=>"Specialty King",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      }
     ]
@@ -308,7 +321,7 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
     organizer=get_user("peter")
     image= {:path=>"db/bta/aquarium.jpg",
      :caption=>"Aquarium",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851
      }
     create_image organizer, image
@@ -316,7 +329,7 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
     organizer=get_user("jan")
     image= {:path=>"db/bta/bromo_tower.jpg",
      :caption=>"Bromo Tower",
-     :lng=>-76.6228645, 
+     :lng=>-76.6228645,
      :lat=>39.2876736
      }
     create_image organizer, image
@@ -356,7 +369,7 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
     organizer=get_user("marsha")
     image= {:path=>"db/bta/visitor_center.jpg",
      :caption=>"Visitor Center",
-     :lng=>-76.6155792, 
+     :lng=>-76.6155792,
      :lat=>39.28565
      }
     create_image organizer, image
@@ -373,4 +386,42 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
     puts "#{Image.count} images created and #{ThingImage.count("distinct image_id")} for things"
   end
 
+  desc 'create tags and associations'
+  task make_thing_tags: :environment do
+    Tag.destroy_all
+    ThingTag.destroy_all
+    museum = Thing.find_by(name: "B&O Railroad Museum")
+    museum_tag = create_tag 'Museum'
+    indoor_tag = create_tag 'Indoor'
+    create_thing_tag museum, museum_tag
+    create_thing_tag museum, indoor_tag
+
+
+    water_taxi = Thing.find_by(name: "Baltimore Water Taxi")
+    water_tag = create_tag 'Water'
+    outdoor_tag = create_tag 'Outdoor'
+    create_thing_tag water_taxi, water_tag
+    create_thing_tag water_taxi, outdoor_tag
+
+    tour = Thing.find_by(name: "Rent-A-Tour")
+    service_tag = create_tag 'Services'
+    create_thing_tag tour, service_tag
+    create_thing_tag tour, outdoor_tag
+
+
+    inn = Thing.find_by(name: "Holiday Inn Timonium")
+    inn_tag  = create_tag 'Inn'
+    create_thing_tag inn, service_tag
+    create_thing_tag inn, indoor_tag
+    create_thing_tag inn, inn_tag
+
+    aquarium = Thing.find_by(name: "National Aquarium")
+    create_thing_tag aquarium, water_tag
+    create_thing_tag aquarium, indoor_tag
+
+    hyatt = Thing.find_by(name: "Hyatt Place Baltimore")
+    create_thing_tag hyatt, service_tag
+    create_thing_tag hyatt, indoor_tag
+    create_thing_tag hyatt, inn_tag
+  end
 end

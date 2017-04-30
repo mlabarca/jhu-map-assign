@@ -1,0 +1,5 @@
+<div class="thing-tags" ng-show="$ctrl.authz.canFilterByTag" ng-if="$ctrl.editing">
+  <tags-input ng-model="$ctrl.tags" add-on-paste="true" placeholder='Start typing to add tags to filter things, i.e. Museum, Indoor, Water, Inn'>
+    <auto-complete source="$ctrl.loadTags($query)" min-length="0"></auto-complete>
+  </tags-input>
+</div>

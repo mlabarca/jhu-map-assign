@@ -1,4 +1,4 @@
-# 
+#
 source 'https://rubygems.org'
 
 gem 'rails', '4.2.6'
@@ -61,4 +61,6 @@ source 'http://insecure.rails-assets.org' do
   gem 'rails-assets-ng-file-upload', '~>12.2', '>= 12.2.11'
   gem 'rails-assets-ng-file-upload-shim'
   gem 'rails-assets-ui-cropper', '~>1.0', '>=1.0.4'
+  gem 'rails-assets-ng-tags-input'
+  gem 'rails-assets-isteven-angular-multiselect'
 end

@@ -9,6 +9,8 @@
 //= require ng-file-upload-shim
 //= require ng-file-upload
 //= require ui-cropper
+//= require ng-tags-input
+//= require isteven-angular-multiselect
 
 //= require spa-demo/app.module
 //= require spa-demo/app.router
@@ -59,6 +61,8 @@
 //= require spa-demo/subjects/images/images.component
 //= require spa-demo/subjects/images/images_authz.directive
 //= require spa-demo/subjects/things/things.service
+//= require spa-demo/subjects/things/tags.service
+//= require spa-demo/subjects/things/selected_tags.service
 //= require spa-demo/subjects/things/thing_images.service
 //= require spa-demo/subjects/things/things_authz.service
 //= require spa-demo/subjects/things/things_authz.directive
