@@ -7,12 +7,13 @@
 
   CurrentSubjects.$inject = ["$rootScope","$q",
                              "$resource",
+                             "spa-demo.subjects.SelectedThing",
                              "spa-demo.geoloc.currentOrigin",
                              "spa-demo.config.APP_CONFIG"];
 
-  function CurrentSubjects($rootScope, $q, $resource, currentOrigin, APP_CONFIG) {
-    var subjectsResource = $resource(APP_CONFIG.server_url + "/api/subjects",{},{
-      query: { cache:false, isArray:true }
+  function CurrentSubjects($rootScope, $q, $resource, SelectedThing, currentOrigin, APP_CONFIG) {
+    var subjectsResource = $resource(APP_CONFIG.server_url + "/api/subjects", {thing_id: '@thing_id'},{
+      query: { cache:false, isArray:true, params: { thing_id: '@thing_id'}}
     });
     var service = this;
     service.version = 0;
@@ -28,9 +29,10 @@
 
     //refresh();
     $rootScope.$watch(function(){ return currentOrigin.getVersion(); }, refresh);
+    $rootScope.$watch(function(){ return SelectedThing.get(); }, refresh);
     return;
     ////////////////
-    function refresh() {      
+    function refresh() {
       var params=currentOrigin.getPosition();
       if (!params || !params.lng || !params.lat) {
         params=angular.copy(APP_CONFIG.default_position);
@@ -44,13 +46,18 @@
       params["order"]="ASC";
       console.log("refresh",params);
 
+      var selectedThing = SelectedThing.get();
+      if (selectedThing){
+        params["thing_id"]= selectedThing;
+      }
       var p1=refreshImages(params);
-      params["subject"]="thing";      
+
+      params["subject"]="thing";
       var p2=refreshThings(params);
       $q.all([p1,p2]).then(
         function(){
           service.setCurrentImageForCurrentThing();
-        });      
+        });
     }
 
     function refreshImages(params) {
@@ -93,7 +100,7 @@
         service.setCurrentThing(service.thingIdx + 1);
       } else if (service.things.length >= 1) {
         service.setCurrentThing(0);
-      }    
+      }
     }
     function previousThing() {
       if (service.thingIdx !== null) {
@@ -101,7 +108,7 @@
       } else if (service.things.length >= 1) {
         service.setCurrentThing(service.things.length-1);
       }
-    }    
+    }
   }
 
   CurrentSubjects.prototype.getVersion = function() {
@@ -181,7 +188,7 @@
             break;
           }
         }
-      }      
+      }
     }
   }
 
@@ -213,7 +220,7 @@
       }
     }
     if (!found) {
-      this.setCurrentImage(null, true);      
+      this.setCurrentImage(null, true);
     }
   }
   CurrentSubjects.prototype.setCurrentThingId = function(thing_id, skipImage) {
@@ -228,8 +235,8 @@
       }
     }
     if (!found) {
-      this.setCurrentThing(null, true);      
-    }    
+      this.setCurrentThing(null, true);
+    }
   }
   CurrentSubjects.prototype.setCurrentSubjectId = function(thing_id, image_id) {
     console.log("setCurrentSubject", thing_id, image_id);

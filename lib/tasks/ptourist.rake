@@ -102,6 +102,16 @@ namespace :ptourist do
     thing_tag
   end
 
+  # Returns a location close to base_location but with a random
+  # distance to it of a maximum of 0.0005%
+  def random_loc_from(base_location)
+    random_factor = rand(0...0.000005)
+    {
+      lat: (random_factor * base_location[:lat]) + base_location[:lat],
+      lng: (random_factor * base_location[:lng]) + base_location[:lng]
+    }
+  end
+
   desc "reset all data"
   task reset_all: [:users,:subjects] do
   end
@@ -150,20 +160,21 @@ namespace :ptourist do
     :notes=>"Trains rule, boats and cars drool"}
     organizer=get_user("alice")
     members=boy_users
+    base_location = {lat: 39.2854217, lng: -76.6327453}
     images=[
     {:path=>"db/bta/image001_original.jpg",
      :caption=>"Front of Museum Restored: 1884 B&O Railroad Museum Roundhouse",
-     :lng=>-76.6327453,
-     :lat=>39.2854217,
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat],
      :priority=>0},
     {:path=>"db/bta/image002_original.jpg",
      :caption=>"Roundhouse Inside: One-of-a-Kind Railroad Collection inside the B&O Roundhouse",
-     :lng=>-76.6327453,
-     :lat=>39.2854217},
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]},
     {:path=>"db/bta/image003_original.jpg",
      :caption=>"40 acres of railroad history at the B&O Railroad Museum",
-     :lng=>-76.6327453,
-     :lat=>39.2854217},
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]},
     ]
     create_thing thing, organizer, members, images
 
@@ -193,6 +204,7 @@ namespace :ptourist do
     ]
     create_thing thing, organizer, members, images
 
+    base_location = {lat: 39.297953, lng: -76.615686}
     thing={:name=>"Rent-A-Tour",
     :description=>"Professional guide services and itinerary planner in Baltimore, Washington DC, Annapolis and the surronding region",
     :notes=>"Bus is clean and ready to roll"}
@@ -201,8 +213,8 @@ namespace :ptourist do
     images=[
     {:path=>"db/bta/image004_original.jpg",
      :caption=>"Overview",
-     :lng=>nil,
-     :lat=>nil
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/image005_original.jpg",
      :caption=>"Roger Taney Statue",
@@ -233,6 +245,7 @@ namespace :ptourist do
     :notes=>"Remember to water the fish"}
     organizer=get_user("carol")
     members=girl_users
+    base_location = {lat: 39.2851, lng: -76.6083}
     images=[
     {:path=>"db/bta/naqua-001.jpg",
      :caption=>"National Aquarium buildings",
@@ -242,18 +255,18 @@ namespace :ptourist do
      },
     {:path=>"db/bta/naqua-002.jpg",
      :caption=>"Blue Blubber Jellies",
-     :lng=>-76.6083,
-     :lat=>39.2851,
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/naqua-003.jpg",
      :caption=>"Linne's two-toed sloths",
-     :lng=>-76.6083,
-     :lat=>39.2851,
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/naqua-004.jpg",
      :caption=>"Hosting millions of students and teachers",
-     :lng=>-76.6083,
-     :lat=>39.2851,
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      }
     ]
     create_thing thing, organizer, members, images
@@ -267,6 +280,7 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
 "}
     organizer=get_user("marsha")
     members=girl_users
+    base_location = {lat: 39.2847, lng: -76.5987}
     images=[
     {:path=>"db/bta/hpm-001.jpg",
      :caption=>"Hotel Front Entrance",
@@ -276,44 +290,44 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
      },
     {:path=>"db/bta/hpm-002.jpg",
      :caption=>"Terrace",
-     :lng=>-76.5987,
-     :lat=>39.2847,
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat],
      :priority=>1
      },
     {:path=>"db/bta/hpm-003.jpg",
      :caption=>"Cozy Corner",
-     :lng=>-76.5987,
-     :lat=>39.2847
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/hpm-004.jpg",
      :caption=>"Fitness Center",
-     :lng=>-76.5987,
-     :lat=>39.2847
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/hpm-005.jpg",
      :caption=>"Gallery Area",
-     :lng=>-76.5987,
-     :lat=>39.2847
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/hpm-006.jpg",
      :caption=>"Harbor Room",
-     :lng=>-76.5987,
-     :lat=>39.2847
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/hpm-007.jpg",
      :caption=>"Indoor Pool",
-     :lng=>-76.5987,
-     :lat=>39.2847
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/hpm-008.jpg",
      :caption=>"Lobby",
-     :lng=>-76.5987,
-     :lat=>39.2847
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      },
     {:path=>"db/bta/hpm-009.jpg",
      :caption=>"Specialty King",
-     :lng=>-76.5987,
-     :lat=>39.2847
+     :lng=>random_loc_from(base_location)[:lng],
+     :lat=>random_loc_from(base_location)[:lat]
      }
     ]
     create_thing thing, organizer, members, images
